@@ -1,0 +1,30 @@
+from deepface import DeepFace
+import cv2
+
+# Initialize webcam
+video_capture = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video_capture.read()
+
+    # Save the frame as an image
+    cv2.imwrite("temp.jpg", frame)
+
+    # Analyze emotion
+    try:
+        result = DeepFace.analyze(img_path="temp.jpg", actions=['emotion'])
+        emotion = result[0]['dominant_emotion']
+        print(f"Detected Emotion: {emotion}")
+    except:
+        print("No face detected")
+
+    # Show the frame
+    cv2.imshow('Video', frame)
+
+    # Press 'q' to quit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the webcam and close windows
+video_capture.release()
+cv2.destroyAllWindows()
